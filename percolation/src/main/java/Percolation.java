@@ -41,7 +41,15 @@ public class Percolation
    */
   public boolean isFull(final int row, final int col)
   {
-    return !isOpen(row, col);
+    final int location = location(row, col);
+    if (location == BAD_LOCATION)
+    {
+      throw new IllegalArgumentException(String.format("Bad location, (%s, %s)",
+                                                       row,
+                                                       col));
+    }
+    return openSites[location] && unionFind.connected(0, location)
+           && unionFind.connected(size() - 1, location);
   }
 
   /**
@@ -54,6 +62,12 @@ public class Percolation
   public boolean isOpen(final int row, final int col)
   {
     final int location = location(row, col);
+    if (location == BAD_LOCATION)
+    {
+      throw new IllegalArgumentException(String.format("Bad location, (%s, %s)",
+                                                       row,
+                                                       col));
+    }
     return openSites[location];
   }
 
@@ -75,9 +89,14 @@ public class Percolation
    */
   public void open(final int row, final int col)
   {
-
     final int location = location(row, col);
-    if (openSites[location])
+    if (location == BAD_LOCATION)
+    {
+      throw new IllegalArgumentException(String.format("Bad location, (%s, %s)",
+                                                       row,
+                                                       col));
+    }
+    if (isOpen(row, col))
     {
       return;
     }
@@ -132,31 +151,23 @@ public class Percolation
    */
   public boolean percolates()
   {
-    return unionFind.connected(0, size());
+    return unionFind.connected(0, size() - 1);
   }
 
   private int eastLocation(final int row, final int col)
   {
-    final int eastCol = col - 1;
-    if (eastCol > 0)
-    {
-      return location(row, eastCol);
-    }
-    else
-    {
-      return BAD_LOCATION;
-    }
+    return location(row, col - 1);
   }
 
   private int location(final int row, final int col)
   {
     if (row < 1 || row > gridSide)
     {
-      throw new IllegalArgumentException("Row out of bounds, " + row);
+      return BAD_LOCATION;
     }
     if (col < 1 || col > gridSide)
     {
-      throw new IllegalArgumentException("Column out of bounds, " + col);
+      return BAD_LOCATION;
     }
 
     final int location = (row - 1) * gridSide + col - 1 + 1;
@@ -165,46 +176,22 @@ public class Percolation
 
   private int northLocation(final int row, final int col)
   {
-    final int northRow = row - 1;
-    if (northRow > 0)
-    {
-      return location(northRow, col);
-    }
-    else
-    {
-      return BAD_LOCATION;
-    }
+    return location(row - 1, col);
   }
 
   private int size()
   {
-    return gridSide * 2 + 2;
+    return gridSide * gridSide + 2;
   }
 
   private int southLocation(final int row, final int col)
   {
-    final int southRow = row - 1;
-    if (southRow <= gridSide)
-    {
-      return location(southRow, col);
-    }
-    else
-    {
-      return BAD_LOCATION;
-    }
+    return location(row - 1, col);
   }
 
   private int westLocation(final int row, final int col)
   {
-    final int westCol = col + 1;
-    if (westCol <= gridSide)
-    {
-      return location(row, westCol);
-    }
-    else
-    {
-      return BAD_LOCATION;
-    }
+    return location(row, col + 1);
   }
 
 }
