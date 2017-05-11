@@ -22,9 +22,10 @@ public class Percolation
     {
       throw new IllegalArgumentException("Invalid grid size, " + n);
     }
-
     gridSide = n;
+
     final int size = size();
+
     unionFind = new WeightedQuickUnionUF(size);
 
     openSites = new boolean[size];
@@ -41,15 +42,8 @@ public class Percolation
    */
   public boolean isFull(final int row, final int col)
   {
-    final int location = location(row, col);
-    if (location == BAD_LOCATION)
-    {
-      throw new IllegalArgumentException(String.format("Bad location, (%s, %s)",
-                                                       row,
-                                                       col));
-    }
-    return openSites[location] && unionFind.connected(0, location)
-           && unionFind.connected(size() - 1, location);
+    final int location = validateLocation(row, col);
+    return openSites[location] && unionFind.connected(0, location);
   }
 
   /**
@@ -61,13 +55,7 @@ public class Percolation
    */
   public boolean isOpen(final int row, final int col)
   {
-    final int location = location(row, col);
-    if (location == BAD_LOCATION)
-    {
-      throw new IllegalArgumentException(String.format("Bad location, (%s, %s)",
-                                                       row,
-                                                       col));
-    }
+    final int location = validateLocation(row, col);
     return openSites[location];
   }
 
@@ -89,14 +77,8 @@ public class Percolation
    */
   public void open(final int row, final int col)
   {
-    final int location = location(row, col);
-    if (location == BAD_LOCATION)
-    {
-      throw new IllegalArgumentException(String.format("Bad location, (%s, %s)",
-                                                       row,
-                                                       col));
-    }
-    if (isOpen(row, col))
+    final int location = validateLocation(row, col);
+    if (openSites[location])
     {
       return;
     }
@@ -117,29 +99,29 @@ public class Percolation
     }
 
     // Connect north
-    final int northLocation = northLocation(row, col);
-    if (northLocation > 0)
+    final int northLocation = location(row - 1, col);
+    if (northLocation != BAD_LOCATION && openSites[northLocation])
     {
       unionFind.union(northLocation, location);
     }
 
     // Connect south
-    final int southLocation = southLocation(row, col);
-    if (southLocation > 0)
+    final int southLocation = location(row + 1, col);
+    if (southLocation != BAD_LOCATION && openSites[southLocation])
     {
       unionFind.union(southLocation, location);
     }
 
     // Connect east
-    final int eastLocation = eastLocation(row, col);
-    if (eastLocation > 0)
+    final int eastLocation = location(row, col - 1);
+    if (eastLocation != BAD_LOCATION && openSites[eastLocation])
     {
       unionFind.union(eastLocation, location);
     }
 
     // Connect west
-    final int westLocation = westLocation(row, col);
-    if (westLocation > 0)
+    final int westLocation = location(row, col + 1);
+    if (westLocation != BAD_LOCATION && openSites[westLocation])
     {
       unionFind.union(westLocation, location);
     }
@@ -152,11 +134,6 @@ public class Percolation
   public boolean percolates()
   {
     return unionFind.connected(0, size() - 1);
-  }
-
-  private int eastLocation(final int row, final int col)
-  {
-    return location(row, col - 1);
   }
 
   private int location(final int row, final int col)
@@ -174,24 +151,21 @@ public class Percolation
     return location;
   }
 
-  private int northLocation(final int row, final int col)
-  {
-    return location(row - 1, col);
-  }
-
   private int size()
   {
     return gridSide * gridSide + 2;
   }
 
-  private int southLocation(final int row, final int col)
+  private int validateLocation(final int row, final int col)
   {
-    return location(row - 1, col);
-  }
-
-  private int westLocation(final int row, final int col)
-  {
-    return location(row, col + 1);
+    final int location = location(row, col);
+    if (location == BAD_LOCATION)
+    {
+      throw new IllegalArgumentException(String.format("Bad location, (%s, %s)",
+                                                       row,
+                                                       col));
+    }
+    return location;
   }
 
 }
