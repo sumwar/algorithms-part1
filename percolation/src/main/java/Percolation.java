@@ -3,6 +3,7 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation
 {
 
+  private static final int BAD_LOCATION = -1;
   private final int gridSide;
   private final WeightedQuickUnionUF unionFind;
 
@@ -19,7 +20,7 @@ public class Percolation
       throw new IllegalArgumentException("Invalid grid size, " + n);
     }
 
-    this.gridSide = n;
+    gridSide = n;
     unionFind = new WeightedQuickUnionUF(gridSize());
   }
 
@@ -84,34 +85,30 @@ public class Percolation
     }
 
     // Connect north
-    final int northRow = row - 1;
-    if (northRow > 0)
+    final int northLocation = northLocation(row, col);
+    if (northLocation > 0)
     {
-      final int northLocation = location(northRow, col);
       unionFind.union(northLocation, location);
     }
 
     // Connect south
-    final int southRow = row + 1;
-    if (southRow <= gridSide)
+    final int southLocation = southLocation(row, col);
+    if (southLocation > 0)
     {
-      final int southLocation = location(southRow, col);
       unionFind.union(southLocation, location);
     }
 
     // Connect east
-    final int eastCol = col - 1;
-    if (eastCol > 0)
+    final int eastLocation = location(row, col);
+    if (eastLocation > 0)
     {
-      final int eastLocation = location(row, eastCol);
       unionFind.union(eastLocation, location);
     }
 
     // Connect west
-    final int westCol = col - 1;
-    if (westCol > 0)
+    final int westLocation = location(row, col);
+    if (westLocation > 0)
     {
-      final int westLocation = location(row, westCol);
       unionFind.union(westLocation, location);
     }
 
@@ -143,6 +140,32 @@ public class Percolation
 
     final int location = (row - 1) * gridSide + col - 1 + 1;
     return location;
+  }
+
+  private int northLocation(final int row, final int col)
+  {
+    final int northRow = row - 1;
+    if (northRow > 0)
+    {
+      return location(northRow, col);
+    }
+    else
+    {
+      return BAD_LOCATION;
+    }
+  }
+
+  private int southLocation(final int row, final int col)
+  {
+    final int southRow = row - 1;
+    if (southRow <= gridSide)
+    {
+      return location(southRow, col);
+    }
+    else
+    {
+      return BAD_LOCATION;
+    }
   }
 
 }
