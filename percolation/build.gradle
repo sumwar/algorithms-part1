@@ -1,0 +1,26 @@
+apply plugin: 'java-library'
+apply plugin: 'eclipse'
+apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+checkstyle {
+    toolVersion = '6.19'
+    reportsDir = file("$project.buildDir/reports")
+		configFile = file("$rootProject.projectDir/../checkstyle-coursera.xml")
+}
+
+findbugs {
+    reportsDir = file("$project.buildDir/reports")
+    effort = "max"
+    reportLevel = "high"
+    includeFilter = file("$rootProject.projectDir/../findbugs-coursera.xml")
+}
+
