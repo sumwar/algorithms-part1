@@ -4,8 +4,11 @@ public class Percolation
 {
 
   private static final int BAD_LOCATION = -1;
+
   private final int gridSide;
   private final WeightedQuickUnionUF unionFind;
+  private int numberOfOpenSites;
+  private final boolean[] openSites;
 
   /**
    * create n-by-n grid, with all sites blocked
@@ -21,7 +24,12 @@ public class Percolation
     }
 
     gridSide = n;
-    unionFind = new WeightedQuickUnionUF(gridSize());
+    final int size = size();
+    unionFind = new WeightedQuickUnionUF(size);
+
+    openSites = new boolean[size];
+    openSites[0] = true;
+    openSites[size - 1] = true;
   }
 
   /**
@@ -33,9 +41,7 @@ public class Percolation
    */
   public boolean isFull(final int row, final int col)
   {
-    location(row, col);
-
-    return false;
+    return !isOpen(row, col);
   }
 
   /**
@@ -47,9 +53,8 @@ public class Percolation
    */
   public boolean isOpen(final int row, final int col)
   {
-    location(row, col);
-
-    return false;
+    final int location = location(row, col);
+    return openSites[location];
   }
 
   /**
@@ -59,7 +64,7 @@ public class Percolation
    */
   public int numberOfOpenSites()
   {
-    return 0;
+    return numberOfOpenSites;
   }
 
   /**
@@ -70,7 +75,15 @@ public class Percolation
    */
   public void open(final int row, final int col)
   {
+
     final int location = location(row, col);
+    if (openSites[location])
+    {
+      return;
+    }
+
+    openSites[location] = true;
+    numberOfOpenSites++;
 
     // Connect grid top row
     if (row == 1)
@@ -81,7 +94,7 @@ public class Percolation
     // Connect grid bottom row
     if (row == gridSide)
     {
-      unionFind.union(gridSize() - 1, location);
+      unionFind.union(size() - 1, location);
     }
 
     // Connect north
@@ -99,14 +112,14 @@ public class Percolation
     }
 
     // Connect east
-    final int eastLocation = location(row, col);
+    final int eastLocation = eastLocation(row, col);
     if (eastLocation > 0)
     {
       unionFind.union(eastLocation, location);
     }
 
     // Connect west
-    final int westLocation = location(row, col);
+    final int westLocation = westLocation(row, col);
     if (westLocation > 0)
     {
       unionFind.union(westLocation, location);
@@ -119,12 +132,20 @@ public class Percolation
    */
   public boolean percolates()
   {
-    return unionFind.connected(0, gridSize());
+    return unionFind.connected(0, size());
   }
 
-  private int gridSize()
+  private int eastLocation(final int row, final int col)
   {
-    return gridSide * 2 + 2;
+    final int eastCol = col - 1;
+    if (eastCol > 0)
+    {
+      return location(row, eastCol);
+    }
+    else
+    {
+      return BAD_LOCATION;
+    }
   }
 
   private int location(final int row, final int col)
@@ -155,12 +176,30 @@ public class Percolation
     }
   }
 
+  private int size()
+  {
+    return gridSide * 2 + 2;
+  }
+
   private int southLocation(final int row, final int col)
   {
     final int southRow = row - 1;
     if (southRow <= gridSide)
     {
       return location(southRow, col);
+    }
+    else
+    {
+      return BAD_LOCATION;
+    }
+  }
+
+  private int westLocation(final int row, final int col)
+  {
+    final int westCol = col + 1;
+    if (westCol <= gridSide)
+    {
+      return location(row, westCol);
     }
     else
     {
