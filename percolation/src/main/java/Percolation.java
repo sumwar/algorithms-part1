@@ -12,9 +12,6 @@ public class Percolation
 
   /**
    * create n-by-n grid, with all sites blocked
-   *
-   * @param n
-   *        Side of grid
    */
   public Percolation(final int n)
   {
@@ -35,10 +32,6 @@ public class Percolation
 
   /**
    * is site (row, col) full?
-   *
-   * @param row
-   * @param col
-   * @return
    */
   public boolean isFull(final int row, final int col)
   {
@@ -48,10 +41,6 @@ public class Percolation
 
   /**
    * is site (row, col) open?
-   *
-   * @param row
-   * @param col
-   * @return
    */
   public boolean isOpen(final int row, final int col)
   {
@@ -61,8 +50,6 @@ public class Percolation
 
   /**
    * number of open sites
-   *
-   * @return
    */
   public int numberOfOpenSites()
   {
@@ -71,9 +58,6 @@ public class Percolation
 
   /**
    * open site (row, col) if it is not open already
-   *
-   * @param row
-   * @param col
    */
   public void open(final int row, final int col)
   {
