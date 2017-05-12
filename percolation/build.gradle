@@ -5,7 +5,7 @@ apply plugin: 'findbugs'
 
 repositories {
     jcenter()
-		mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
@@ -15,7 +15,7 @@ dependencies {
 checkstyle {
     toolVersion = '6.19'
     reportsDir = file("$project.buildDir/reports")
-		configFile = file("$rootProject.projectDir/../checkstyle-coursera.xml")
+    configFile = file("$rootProject.projectDir/../checkstyle-coursera.xml")
 }
 
 findbugs {
