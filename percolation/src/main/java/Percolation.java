@@ -76,12 +76,6 @@ public class Percolation
       unionFind.union(0, location);
     }
 
-    // Connect grid bottom row
-    if (row == gridSide)
-    {
-      unionFind.union(size() - 1, location);
-    }
-
     // Connect north
     final int northLocation = location(row - 1, col);
     if (northLocation != BAD_LOCATION && openSites[northLocation])
@@ -117,6 +111,16 @@ public class Percolation
    */
   public boolean percolates()
   {
+    // Connect open sites on the bottom row of the grid to the end
+    for (int col = 1; col <= gridSide; col++)
+    {
+      final int location = location(gridSide, col);
+      if (openSites[location])
+      {
+        unionFind.union(size() - 1, location);
+      }
+    }
+    // Check percolation
     return unionFind.connected(0, size() - 1);
   }
 

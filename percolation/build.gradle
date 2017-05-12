@@ -5,6 +5,7 @@ apply plugin: 'findbugs'
 
 repositories {
     jcenter()
+		mavenCentral()
 }
 
 dependencies {
