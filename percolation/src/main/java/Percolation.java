@@ -149,9 +149,8 @@ public class Percolation
     final int location = location(row, col);
     if (location == BAD_LOCATION)
     {
-      throw new IllegalArgumentException(String.format("Bad location, (%s, %s)",
-                                                       row,
-                                                       col));
+      throw new IllegalArgumentException(String
+        .format("Bad location (%d, %d) for grid size %d", gridSide, row, col));
     }
     return location;
   }
