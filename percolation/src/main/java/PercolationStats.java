@@ -72,9 +72,9 @@ public class PercolationStats
   @Override
   public String toString()
   {
-    return String.format("mean                    = %0.16f%n"
-                         + "stddev                  = %0.16f%n"
-                         + "95% confidence interval = [%0.16f, %0.16f]",
+    return String.format("mean                    = %.16f%n"
+                         + "stddev                  = %.16f%n"
+                         + "95%% confidence interval = [%.16f, %.16f]",
                          mean(),
                          stddev(),
                          confidenceLo(),
@@ -89,11 +89,11 @@ public class PercolationStats
 
   private void performTrials()
   {
-    for (int i = 0; i < x.length; i++)
+    for (int trial = 0; trial < x.length; trial++)
     {
-      final int size = i * i;
+      final int size = gridSize * gridSize;
       final Percolation percolation = new Percolation(gridSize);
-      for (int j = 0; j < size; j++)
+      for (int i = 0; i < size; i++)
       {
         // Open a random location
         do
@@ -113,7 +113,7 @@ public class PercolationStats
         // Check percolation
         if (percolation.percolates())
         {
-          x[i] = (j + 1) / (double) gridSize;
+          x[trial] = (i + 1) / (double) size;
           break;
         }
       }
@@ -124,7 +124,7 @@ public class PercolationStats
   {
     final int min = 1;
     final int max = gridSize;
-    return min + (int) (StdRandom.gaussian() * (max - min + 1));
+    return min + (int) (StdRandom.uniform() * (max - min + 1));
   }
 
 }
