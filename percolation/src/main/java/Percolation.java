@@ -3,7 +3,7 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Percolation
 {
 
-  private static final int BAD_LOCATION = -1;
+  private static final int BAD_SITE_1D_INDEX = -1;
 
   private final int gridSide;
   private final WeightedQuickUnionUF unionFind;
@@ -11,13 +11,13 @@ public class Percolation
   private final boolean[] openSites;
 
   /**
-   * create n-by-n grid, with all sites blocked
+   * create n-by-n grid, with all site1DIndexs blocked
    */
   public Percolation(final int n)
   {
     if (n < 1)
     {
-      throw new IndexOutOfBoundsException("Invalid grid size, " + n);
+      throw new IllegalArgumentException("Invalid grid size, " + n);
     }
     gridSide = n;
 
@@ -31,25 +31,25 @@ public class Percolation
   }
 
   /**
-   * is site (row, col) full?
+   * is site1DIndex (row, col) full?
    */
   public boolean isFull(final int row, final int col)
   {
-    final int site = validateSite(row, col);
-    return openSites[site] && unionFind.connected(0, site);
+    final int site1DIndex = validateSite(row, col);
+    return openSites[site1DIndex] && unionFind.connected(0, site1DIndex);
   }
 
   /**
-   * is site (row, col) open?
+   * is site1DIndex (row, col) open?
    */
   public boolean isOpen(final int row, final int col)
   {
-    final int site = validateSite(row, col);
-    return openSites[site];
+    final int site1DIndex = validateSite(row, col);
+    return openSites[site1DIndex];
   }
 
   /**
-   * number of open sites
+   * number of open site1DIndexs
    */
   public int numberOfOpenSites()
   {
@@ -57,51 +57,57 @@ public class Percolation
   }
 
   /**
-   * open site (row, col) if it is not open already
+   * open site1DIndex (row, col) if it is not open already
    */
   public void open(final int row, final int col)
   {
-    final int site = validateSite(row, col);
-    if (openSites[site])
+    final int site1DIndex = validateSite(row, col);
+    if (openSites[site1DIndex])
     {
       return;
     }
 
-    openSites[site] = true;
+    openSites[site1DIndex] = true;
     numberOfOpenSites++;
 
     // Connect grid top row
     if (row == 1)
     {
-      unionFind.union(0, site);
+      unionFind.union(0, site1DIndex);
+    }
+
+    // Connect grid bottom row - may cause backwash!
+    if (row == gridSide)
+    {
+      unionFind.union(size() - 1, site1DIndex);
     }
 
     // Connect north
-    final int northLocation = xyTo1D(row - 1, col);
-    if (northLocation != BAD_LOCATION && openSites[northLocation])
+    final int north1DIndex = xyTo1D(row - 1, col);
+    if (north1DIndex != BAD_SITE_1D_INDEX && openSites[north1DIndex])
     {
-      unionFind.union(northLocation, site);
+      unionFind.union(north1DIndex, site1DIndex);
     }
 
     // Connect south
-    final int southLocation = xyTo1D(row + 1, col);
-    if (southLocation != BAD_LOCATION && openSites[southLocation])
+    final int south1DIndex = xyTo1D(row + 1, col);
+    if (south1DIndex != BAD_SITE_1D_INDEX && openSites[south1DIndex])
     {
-      unionFind.union(southLocation, site);
+      unionFind.union(south1DIndex, site1DIndex);
     }
 
     // Connect east
-    final int eastLocation = xyTo1D(row, col - 1);
-    if (eastLocation != BAD_LOCATION && openSites[eastLocation])
+    final int east1DIndex = xyTo1D(row, col - 1);
+    if (east1DIndex != BAD_SITE_1D_INDEX && openSites[east1DIndex])
     {
-      unionFind.union(eastLocation, site);
+      unionFind.union(east1DIndex, site1DIndex);
     }
 
     // Connect west
-    final int westLocation = xyTo1D(row, col + 1);
-    if (westLocation != BAD_LOCATION && openSites[westLocation])
+    final int west1DIndex = xyTo1D(row, col + 1);
+    if (west1DIndex != BAD_SITE_1D_INDEX && openSites[west1DIndex])
     {
-      unionFind.union(westLocation, site);
+      unionFind.union(west1DIndex, site1DIndex);
     }
 
   }
@@ -111,16 +117,6 @@ public class Percolation
    */
   public boolean percolates()
   {
-    // Connect open sites on the bottom row of the grid to the end
-    for (int col = 1; col <= gridSide; col++)
-    {
-      final int site = xyTo1D(gridSide, col);
-      if (openSites[site] && isFull(gridSide, col))
-      {
-        unionFind.union(size() - 1, site);
-      }
-    }
-    // Check percolation
     return unionFind.connected(0, size() - 1);
   }
 
@@ -131,28 +127,28 @@ public class Percolation
 
   private int validateSite(final int row, final int col)
   {
-    final int site = xyTo1D(row, col);
-    if (site == BAD_LOCATION)
+    final int site1DIndex = xyTo1D(row, col);
+    if (site1DIndex == BAD_SITE_1D_INDEX)
     {
       throw new IndexOutOfBoundsException(String
         .format("Bad site (%d, %d) for grid size %d", gridSide, row, col));
     }
-    return site;
+    return site1DIndex;
   }
 
   private int xyTo1D(final int row, final int col)
   {
     if (row < 1 || row > gridSide)
     {
-      return BAD_LOCATION;
+      return BAD_SITE_1D_INDEX;
     }
     if (col < 1 || col > gridSide)
     {
-      return BAD_LOCATION;
+      return BAD_SITE_1D_INDEX;
     }
 
-    final int site = (row - 1) * gridSide + col - 1 + 1;
-    return site;
+    final int site1DIndex = (row - 1) * gridSide + col - 1 + 1;
+    return site1DIndex;
   }
 
 }

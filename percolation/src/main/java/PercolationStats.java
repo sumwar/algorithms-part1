@@ -4,7 +4,7 @@ import edu.princeton.cs.algs4.StdStats;
 public class PercolationStats
 {
 
-  private final int gridSize;
+  private final int gridSide;
   private final double[] x;
 
   /**
@@ -21,7 +21,7 @@ public class PercolationStats
       throw new IllegalArgumentException("Invalid trials, " + trials);
     }
 
-    gridSize = n;
+    gridSide = n;
     x = new double[trials];
     performTrials();
   }
@@ -80,8 +80,8 @@ public class PercolationStats
   {
     for (int trial = 0; trial < x.length; trial++)
     {
-      final int size = gridSize * gridSize;
-      final Percolation percolation = new Percolation(gridSize);
+      final int size = gridSide * gridSide;
+      final Percolation percolation = new Percolation(gridSide);
       for (int i = 0; i < size; i++)
       {
         // Open a random location
@@ -112,7 +112,7 @@ public class PercolationStats
   private int randomInSize()
   {
     final int min = 1;
-    final int max = gridSize;
+    final int max = gridSide;
     return min + (int) (StdRandom.uniform() * (max - min + 1));
   }
 
