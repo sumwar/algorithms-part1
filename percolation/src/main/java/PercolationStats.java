@@ -4,17 +4,6 @@ import edu.princeton.cs.algs4.StdStats;
 public class PercolationStats
 {
 
-  /**
-   * test client (described below)
-   */
-  public static void main(final String[] args)
-  {
-    final int n = Integer.parseInt(args[0]);
-    final int trials = Integer.parseInt(args[1]);
-    final PercolationStats stats = new PercolationStats(n, trials);
-    System.out.println(stats);
-  }
-
   private final int gridSize;
   private final double[] x;
 
@@ -125,6 +114,17 @@ public class PercolationStats
     final int min = 1;
     final int max = gridSize;
     return min + (int) (StdRandom.uniform() * (max - min + 1));
+  }
+
+  /**
+   * test client (described below)
+   */
+  public static void main(final String[] args)
+  {
+    final int n = Integer.parseInt(args[0]);
+    final int trials = Integer.parseInt(args[1]);
+    final PercolationStats stats = new PercolationStats(n, trials);
+    System.out.println(stats);
   }
 
 }
