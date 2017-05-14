@@ -17,7 +17,7 @@ public class Percolation
   {
     if (n < 1)
     {
-      throw new IllegalArgumentException("Invalid grid size, " + n);
+      throw new IndexOutOfBoundsException("Invalid grid size, " + n);
     }
     gridSide = n;
 
@@ -35,8 +35,8 @@ public class Percolation
    */
   public boolean isFull(final int row, final int col)
   {
-    final int location = validateLocation(row, col);
-    return openSites[location] && unionFind.connected(0, location);
+    final int site = validateSite(row, col);
+    return openSites[site] && unionFind.connected(0, site);
   }
 
   /**
@@ -44,8 +44,8 @@ public class Percolation
    */
   public boolean isOpen(final int row, final int col)
   {
-    final int location = validateLocation(row, col);
-    return openSites[location];
+    final int site = validateSite(row, col);
+    return openSites[site];
   }
 
   /**
@@ -61,47 +61,47 @@ public class Percolation
    */
   public void open(final int row, final int col)
   {
-    final int location = validateLocation(row, col);
-    if (openSites[location])
+    final int site = validateSite(row, col);
+    if (openSites[site])
     {
       return;
     }
 
-    openSites[location] = true;
+    openSites[site] = true;
     numberOfOpenSites++;
 
     // Connect grid top row
     if (row == 1)
     {
-      unionFind.union(0, location);
+      unionFind.union(0, site);
     }
 
     // Connect north
     final int northLocation = xyTo1D(row - 1, col);
     if (northLocation != BAD_LOCATION && openSites[northLocation])
     {
-      unionFind.union(northLocation, location);
+      unionFind.union(northLocation, site);
     }
 
     // Connect south
     final int southLocation = xyTo1D(row + 1, col);
     if (southLocation != BAD_LOCATION && openSites[southLocation])
     {
-      unionFind.union(southLocation, location);
+      unionFind.union(southLocation, site);
     }
 
     // Connect east
     final int eastLocation = xyTo1D(row, col - 1);
     if (eastLocation != BAD_LOCATION && openSites[eastLocation])
     {
-      unionFind.union(eastLocation, location);
+      unionFind.union(eastLocation, site);
     }
 
     // Connect west
     final int westLocation = xyTo1D(row, col + 1);
     if (westLocation != BAD_LOCATION && openSites[westLocation])
     {
-      unionFind.union(westLocation, location);
+      unionFind.union(westLocation, site);
     }
 
   }
@@ -114,10 +114,10 @@ public class Percolation
     // Connect open sites on the bottom row of the grid to the end
     for (int col = 1; col <= gridSide; col++)
     {
-      final int location = xyTo1D(gridSide, col);
-      if (openSites[location] && isFull(gridSide, col))
+      final int site = xyTo1D(gridSide, col);
+      if (openSites[site] && isFull(gridSide, col))
       {
-        unionFind.union(size() - 1, location);
+        unionFind.union(size() - 1, site);
       }
     }
     // Check percolation
@@ -129,15 +129,15 @@ public class Percolation
     return gridSide * gridSide + 2;
   }
 
-  private int validateLocation(final int row, final int col)
+  private int validateSite(final int row, final int col)
   {
-    final int location = xyTo1D(row, col);
-    if (location == BAD_LOCATION)
+    final int site = xyTo1D(row, col);
+    if (site == BAD_LOCATION)
     {
-      throw new IllegalArgumentException(String
-        .format("Bad location (%d, %d) for grid size %d", gridSide, row, col));
+      throw new IndexOutOfBoundsException(String
+        .format("Bad site (%d, %d) for grid size %d", gridSide, row, col));
     }
-    return location;
+    return site;
   }
 
   private int xyTo1D(final int row, final int col)
@@ -151,8 +151,8 @@ public class Percolation
       return BAD_LOCATION;
     }
 
-    final int location = (row - 1) * gridSide + col - 1 + 1;
-    return location;
+    final int site = (row - 1) * gridSide + col - 1 + 1;
+    return site;
   }
 
 }

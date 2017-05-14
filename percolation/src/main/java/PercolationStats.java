@@ -47,7 +47,7 @@ public class PercolationStats
    */
   public double mean()
   {
-    return StdStats.max(x);
+    return StdStats.mean(x);
   }
 
   /**
