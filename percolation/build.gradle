@@ -1,11 +1,1 @@
 apply from: '../common.gradle'
-
-task submission(type: Zip) {
-    def username = System.properties['user.name'].replaceAll(" ", "").toLowerCase()
-    archiveName = username + '_' + rootProject.name + '_submission.zip'
-    from 'src/main/java'
-    include '*.java'
-		destinationDir(projectDir)
-}
-
-build.finalizedBy(submission)
