@@ -2,7 +2,7 @@
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
-   // private static final int INVALID_SITE = -1;
+   private static final int INVALID_SITE = -1;
    private final boolean[] openSites;
    private int numberOfOpenSites;
    private int gridSize;
@@ -26,7 +26,7 @@ public class Percolation {
 
    public void open(int row, int col)
    {
-      int site = siteValid(row, col);
+      int site = xyTo1D(row, col);
       if (!openSites[site])
       {
          openSites[site] = true;
@@ -46,7 +46,7 @@ public class Percolation {
       }
 
       // connect to neighbors
-      unionNeighbors(row, col);
+      unionAround(row, col);
    }
    
    /**
@@ -54,7 +54,7 @@ public class Percolation {
     */
    public boolean isOpen(int row, int col)
    {
-      int site = siteValid(row, col);
+      int site = xyTo1D(row, col);
       return openSites[site];
    }
    
@@ -63,7 +63,7 @@ public class Percolation {
     */
    public boolean isFull(int row, int col)
    {
-      int site = siteValid(row, col);
+      int site = xyTo1D(row, col);
       return openSites[site] && wQUF.connected(0, site);
    }
    
@@ -72,34 +72,34 @@ public class Percolation {
        return numberOfOpenSites;
    }
 
-   private void unionNeighbors(int row, int col)
+   private void unionAround(int row, int col)
    {
-      int site = siteValid(row, col); // current site
+      int site = xyTo1D(row, col); // current site
       
       // connect up
-      int upSite = siteValid(row - 1, col);
-      if (isOpen(row - 1, col) && openSites[upSite])
+      int upSite = xyTo1D(row - 1, col);
+      if (upSite != INVALID_SITE && openSites[upSite])
       {
          wQUF.union(site, upSite);
       }
       
       // connect down
-      int downSite = siteValid(row + 1, col);
-      if (isOpen(row + 1, col) && openSites[downSite])
+      int downSite = xyTo1D(row + 1, col);
+      if (downSite != INVALID_SITE && openSites[downSite])
       {
           wQUF.union(site, downSite);
       }
       
       // connect left
-      int leftSite = siteValid(row, col - 1);
-      if (isOpen(row, col - 1) && openSites[leftSite])
+      int leftSite = xyTo1D(row, col - 1);
+      if (leftSite != INVALID_SITE && openSites[leftSite])
       {
           wQUF.union(site, leftSite);
       }
       
       // connect right
-      int rightSite = siteValid(row, col + 1);
-      if (isOpen(row, col + 1) && openSites[rightSite])
+      int rightSite = xyTo1D(row, col + 1);
+      if (rightSite != INVALID_SITE && openSites[rightSite])
       {
           wQUF.union(site, rightSite);
       }
@@ -110,21 +110,16 @@ public class Percolation {
     */
    private int xyTo1D(int row, int col)
    {
-       int xyToID = (row - 1) * gridSize + col;
-       return xyToID;
-   }
-   
-   private int siteValid(int row, int col)
-   {
+      int xyToID = (row - 1) * gridSize + col;
       if (row < 1 || row > gridSize || col < 1 || col > gridSize)
       {
+         xyToID = INVALID_SITE;
          throw new IndexOutOfBoundsException(String.format("Invalid site, (%s,%s)", row, col));
       }
-      
-      int xyTo1D = xyTo1D(row, col);
-      return xyTo1D;
+       
+      return xyToID;
    }
-      
+         
    public boolean percolates()
    {
        // site located at index = 0 and site located at index arraySize-1 are connected, i.e. they are in the same component
