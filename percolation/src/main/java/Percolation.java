@@ -2,6 +2,7 @@
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
+   // private static final int INVALID_SITE = -1;
    private final boolean[] openSites;
    private int numberOfOpenSites;
    private int gridSize;
@@ -12,11 +13,11 @@ public class Percolation {
    {
       if (n < 1)
       {
-         throw new IllegalArgumentException(n + ", grid size invalid");
+         throw new IllegalArgumentException("Invalid grid size " + n); 
       }
       
       gridSize = n;
-      arraySize  = gridSize * gridSize + 2; // virtual 0 top row site, virtual bottom row site
+      arraySize  = gridSize * gridSize + 2; // virtual 0 top and bottom site
       openSites = new boolean[arraySize];
       openSites[0] = true;
       openSites[arraySize - 1] = true;
@@ -25,13 +26,13 @@ public class Percolation {
 
    public void open(int row, int col)
    {
-      int site = xyTo1D(row, col);
+      int site = siteValid(row, col);
       if (!openSites[site])
       {
          openSites[site] = true;
          numberOfOpenSites++;
       }
-
+         
       // if in row 1 connect to top virtual site
       if (row == 1)
       {
@@ -44,98 +45,90 @@ public class Percolation {
          wQUF.union(arraySize - 1, site);
       }
 
-      // connect up
-       int upSite = xyTo1D(row - 1, col);
-       if (openSites[upSite])
-       {
-           wQUF.union(site, upSite);
-       }
-
-       // connect down
-       int downSite = xyTo1D(row + 1, col);
-       if (openSites[downSite])
-       {
-           wQUF.union(site, downSite);
-       }
-       
-       // left
-       int leftSite = xyTo1D(row, col - 1);
-       if (openSites[leftSite])
-       {
-           wQUF.union(site, leftSite);
-       }
-       
-       // right
-       int rightSite = xyTo1D(row, col + 1);
-       if (openSites[rightSite])
-       {
-           wQUF.union(site, rightSite);
-       }
-       
+      // connect to neighbors
+      unionNeighbors(row, col);
    }
    
+   /**
+    * is site open
+    */
    public boolean isOpen(int row, int col)
    {
-       int site = xyTo1D(row, col);
-       return openSites[site];
+      int site = siteValid(row, col);
+      return openSites[site];
    }
    
+   /**
+    * is site full
+    */
    public boolean isFull(int row, int col)
    {
-       // need to understand concept further. The site has to be open and connected to the top row
-       // an open site that is surrounded by sites that are closed is "blocked" and therefore is not Full
-       int site = xyTo1D(row, col);
-       return openSites[site] && wQUF.connected(0, site);
+      int site = siteValid(row, col);
+      return openSites[site] && wQUF.connected(0, site);
    }
    
    public int numberOfOpenSites()
    {
        return numberOfOpenSites;
    }
+
+   private void unionNeighbors(int row, int col)
+   {
+      int site = siteValid(row, col); // current site
+      
+      // connect up
+      int upSite = siteValid(row - 1, col);
+      if (isOpen(row - 1, col) && openSites[upSite])
+      {
+         wQUF.union(site, upSite);
+      }
+      
+      // connect down
+      int downSite = siteValid(row + 1, col);
+      if (isOpen(row + 1, col) && openSites[downSite])
+      {
+          wQUF.union(site, downSite);
+      }
+      
+      // connect left
+      int leftSite = siteValid(row, col - 1);
+      if (isOpen(row, col - 1) && openSites[leftSite])
+      {
+          wQUF.union(site, leftSite);
+      }
+      
+      // connect right
+      int rightSite = siteValid(row, col + 1);
+      if (isOpen(row, col + 1) && openSites[rightSite])
+      {
+          wQUF.union(site, rightSite);
+      }
+   }
    
-   /*
+   /**
     * convert a 2D location into a 1D representing an array index
     */
    private int xyTo1D(int row, int col)
    {
-       
-       if (siteValid(row, col))
-       {
-       
-           int xyTo1D = 0;
-           
-           xyTo1D = (row - 1) * gridSize + col; // site(1,1) will be represented by index 1 in the array, site(1,2) will be 2
-           return xyTo1D;
-       } 
-       else 
-       {
-           throw new IllegalArgumentException(String.format("Invalid site, (%s,%s)", row, col));
-       }
+       int xyToID = (row - 1) * gridSize + col;
+       return xyToID;
    }
    
-   private boolean siteValid(int row, int col)
+   private int siteValid(int row, int col)
    {
-       if (row < 1 || row > gridSize) 
-       {
-           return false;
-       }
-       if (col < 1 || col > gridSize) 
-       {
-           return false;
-       }
-       
-       return true;
+      if (row < 1 || row > gridSize || col < 1 || col > gridSize)
+      {
+         throw new IndexOutOfBoundsException(String.format("Invalid site, (%s,%s)", row, col));
+      }
+      
+      int xyTo1D = xyTo1D(row, col);
+      return xyTo1D;
    }
-   
+      
    public boolean percolates()
    {
        // site located at index = 0 and site located at index arraySize-1 are connected, i.e. they are in the same component
        return wQUF.connected(0, arraySize - 1);
    }
-   
-   private static void main(String[] args)
-   {
-       // add code for standard input to test code
-       }
-   
+      
    }
