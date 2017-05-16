@@ -14,11 +14,11 @@ public class PercolationStats
   {
      if (n < 1)
      {
-        throw new IllegalAccessError("Invalid Grid Size " + n);
+        throw new IllegalArgumentException("Invalid Grid Size " + n);
      }
      if (trials < 1)
      {
-        throw new IllegalAccessError("Invalid number of trials " + trials);
+        throw new IllegalArgumentException("Invalid number of trials " + trials);
      }
      
      results = new double[trials];
@@ -38,7 +38,7 @@ public class PercolationStats
            int col = randomSite();
            p.open(row, col);
         } while (!p.percolates());
-        results[i] = p.numberOfOpenSites()/ (double) gridSize; 
+        results[i] = p.numberOfOpenSites() / (double) (gridSize * gridSize); 
      }
   }
   
@@ -56,7 +56,7 @@ public class PercolationStats
   public double stddev()
   {
      return StdStats.stddev(results);
-     // handle when std dev is undefine, i.e. trials = 1
+     // handle when std dev is undefined, i.e. trials = 1
      // return Double.NaN;
   }
 
@@ -92,8 +92,8 @@ public class PercolationStats
      int n = Integer.parseInt(args[0]);
      int trials = Integer.parseInt(args[1]);
      PercolationStats exp = new PercolationStats(n, trials);
-     System.out.println("mean   = " + exp.mean());
-     System.out.println("stddev = " + exp.stddev());
+     System.out.println("mean                    = " + exp.mean());
+     System.out.println("stddev                  = " + exp.stddev());
      System.out.println("95% confidence interval = [" + exp.confidenceLo() + ", " + exp.confidenceHi() + "]");
   }
   

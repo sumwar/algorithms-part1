@@ -114,7 +114,7 @@ public class Percolation {
       if (row < 1 || row > gridSize || col < 1 || col > gridSize)
       {
          xyToID = INVALID_SITE;
-         throw new IndexOutOfBoundsException(String.format("Invalid site, (%s,%s)", row, col));
+         // throw new IndexOutOfBoundsException(String.format("Invalid site, (%s,%s)", row, col));
       }
        
       return xyToID;
