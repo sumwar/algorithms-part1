@@ -1,8 +1,0 @@
-bin/
-.gradle/
-.settings/
-.classpath
-.project
-build/
-/data/
-*submission.zip
