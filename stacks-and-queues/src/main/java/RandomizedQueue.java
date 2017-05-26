@@ -7,7 +7,7 @@ import edu.princeton.cs.algs4.StdRandom;
 public class RandomizedQueue<Item> implements Iterable<Item>
 {
    private Item[] rq; // array of items in the queue
-   int n; // number of elements in the queue 
+   private int n; // number of elements in the queue 
  
    /**
    * construct an empty randomized queue
@@ -129,7 +129,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>
   /**
    * resize array
    */
-  public void resize(int capacity) {
+  private void resize(int capacity) {
      Item[] copy = (Item[]) new Object[capacity];
      for (int i = 0; i < n; i++) {
         copy[i] = rq[i];
@@ -137,40 +137,5 @@ public class RandomizedQueue<Item> implements Iterable<Item>
      
      rq = copy;  
   }
-
-  /**
-   * unit testing (optional)
-   */
-  public static void main(String[] args)
-  {
-     RandomizedQueue<Integer> q = new RandomizedQueue<Integer>();
-     
-     // add n random integers to the queue
-     for (int i = 0; i < 10; i++) {
-        int item = StdRandom.uniform(100);
-        System.out.println(item + " added ");
-        q.enqueue(item);
-     }
-     
-     // queue size
-     System.out.println("queue size " + q.size());
-     
-     // test iterator
-     Iterator<Integer> ri = q.iterator();
-     while (ri.hasNext()) {
-        System.out.println("iterator " + ri.next());
-     }
-     
-     // test sample
-     System.out.println("sample " + q.sample());
-     
-     // test dequeue
-     while (q.size() !=0) {
-        System.out.println("dequeue " + q.dequeue());
-     }
-     
-
-     
-  }
-
+  
 }

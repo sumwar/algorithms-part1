@@ -1,25 +1,28 @@
-import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
 public class Permutation {
 
   public static void main(String[] args) {
-         
-     int k = StdIn.readInt();
      
-     // unit testing with files  
+     /*
+      * code for unit testing. Commented for final submission 
+     int k = StdIn.readInt();
+       
      String filename = "C:/Users/musta/Documents/GitHub/"
            + "algorithms-part1/stacks-and-queues/"
            + "src/test/resources/queues/"
            + "Tale.txt"; //args[0]
          
      In in = new In(filename);
-    
+      */
+     
+     // for submission
+     int k = Integer.parseInt(args[0]);
      RandomizedQueue<String> rq = new RandomizedQueue<>();
      
-     while(!in.isEmpty()) {
-        String string = in.readString();
+     while(!StdIn.isEmpty()) {
+        String string = StdIn.readString();
         rq.enqueue(string);
      }
      

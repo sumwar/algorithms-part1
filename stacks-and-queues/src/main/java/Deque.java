@@ -50,7 +50,6 @@ public class Deque<Item> implements Iterable<Item>
    * is the deque empty?
    */
   public boolean isEmpty() {
-    // return first == null;
      return n == 0;
   }
 
@@ -170,21 +169,4 @@ public class Deque<Item> implements Iterable<Item>
     return new DequeIterator();
   }
 
-  /**
-   * unit testing (optional)
-   */
-  public static void main(String[] args)
-  {
-     Deque<Integer> d = new Deque<Integer>();
-
-     for (int i = 0; i < 5; i++) {
-        d.addFirst(i+1);
-        // d.addLast(i + 1);
-     }
-     for (int i = 0; i < 5; i++) {
-        System.out.println(d.removeFirst());
-        // System.out.println(d.removeLast());
-     }
-     
-  }
 }
