@@ -16,6 +16,7 @@ checkstyle {
     toolVersion = '6.19'
     reportsDir = file("$project.buildDir/reports")
     configFile = file("$rootProject.projectDir/../checkstyle-coursera.xml")
+		checkstyleTest.enabled = false
 }
 
 findbugs {
@@ -23,6 +24,7 @@ findbugs {
     effort = "max"
     reportLevel = "high"
     includeFilter = file("$rootProject.projectDir/../findbugs-coursera.xml")
+		findbugsTest.enabled = false
 }
 
 task submission(type: Zip) {

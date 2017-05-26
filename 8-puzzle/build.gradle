@@ -1,0 +1,14 @@
+apply from: '../common.gradle'
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'src/main/java'
+            srcDirs 'src/given/java'
+        }
+    }
+ }
+ 
+dependencies {
+    testCompile "junit:junit:4.12"
+}
