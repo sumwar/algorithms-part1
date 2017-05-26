@@ -5,4 +5,6 @@ bin/
 .project
 build/
 /data/
-*submission.zip
+*.zip
+*.txt
+
