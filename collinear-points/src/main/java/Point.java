@@ -17,39 +17,6 @@ public class Point
   implements Comparable<Point>
 {
 
-  private final class SlopeOrderComparator
-    implements Comparator<Point>
-  {
-    @Override
-    public int compare(final Point point1, final Point point2)
-    {
-      if (point1 == null || point2 == null)
-      {
-        throw new NullPointerException();
-      }
-
-      final Point point0 = Point.this;
-      final double slope1 = point0.slopeTo(point1);
-      final double slope2 = point0.slopeTo(point2);
-      if (doubleEquals(slope1, slope2))
-      {
-        return 0;
-      }
-      else if (slope1 == Double.POSITIVE_INFINITY)
-      {
-        return 1;
-      }
-      else if (slope2 == Double.POSITIVE_INFINITY)
-      {
-        return -1;
-      }
-      else
-      {
-        return (int) Math.signum(slope1 - slope2);
-      }
-    }
-  }
-
   private final int x; // x-coordinate of this point
 
   private final int y; // y-coordinate of this point
@@ -84,32 +51,7 @@ public class Point
    */
   @Override
   public int compareTo(final Point that)
-  {
-    if (that == null)
-    {
-      throw new NullPointerException();
-    }
-
-    final double yDiff = that.y - y;
-    final double xDiff = that.x - x;
-
-    if (yDiff == 0 && xDiff == 0)
-    {
-      return 0;
-    }
-    else if (yDiff == 0 && xDiff > 0)
-    {
-      return -1;
-    }
-    else if (yDiff > 0)
-    {
-      return -1;
-    }
-    else
-    {
-      return +1;
-    }
-  }
+  {}
 
   /**
    * Draws this point to standard draw.
@@ -140,9 +82,7 @@ public class Point
    * @return the Comparator that defines this ordering on points
    */
   public Comparator<Point> slopeOrder()
-  {
-    return new SlopeOrderComparator();
-  }
+  {}
 
   /**
    * Returns the slope between this point and the specified point.
@@ -158,35 +98,7 @@ public class Point
    * @return the slope between this point and the specified point
    */
   public double slopeTo(final Point that)
-  {
-    if (that == null)
-    {
-      throw new NullPointerException();
-    }
-
-    final double yDiff = that.y - y;
-    final double xDiff = that.x - x;
-
-    final double slopeTo;
-    if (yDiff == 0 && xDiff == 0)
-    {
-      slopeTo = Double.NEGATIVE_INFINITY;
-    }
-    else if (xDiff == 0)
-    {
-      slopeTo = Double.POSITIVE_INFINITY;
-    }
-    else if (yDiff == 0)
-    {
-      slopeTo = +0.0;
-    }
-    else
-    {
-      slopeTo = yDiff / xDiff;
-    }
-
-    return slopeTo;
-  }
+  {}
 
   /**
    * Returns a string representation of this point. This method is
@@ -200,21 +112,6 @@ public class Point
   {
     /* DO NOT MODIFY */
     return "(" + x + ", " + y + ")";
-  }
-
-  private boolean doubleEquals(final double slope1, final double slope2)
-  {
-    if (slope1 == Double.POSITIVE_INFINITY
-        && slope2 == Double.POSITIVE_INFINITY)
-    {
-      return true;
-    }
-    if (slope1 == Double.NEGATIVE_INFINITY
-        && slope2 == Double.NEGATIVE_INFINITY)
-    {
-      return true;
-    }
-    return Math.abs(slope1 - slope2) < 1e-10;
   }
 
 }
